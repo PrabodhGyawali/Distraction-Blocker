@@ -1,0 +1,5 @@
+# TOFIX: Fix error with Cors requirements
+
+Go to -> `document.querySelector("#contents")`
+-  Add attribute: 'visibility: hidden'
+- Redirect from shorts
