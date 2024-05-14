@@ -1,4 +1,6 @@
-# TOFIX: Fix error with Cors requirements
+
+
+# TOFIX: Fix error with Cors requirements for API-requests
 
 Go to -> `document.querySelector("#contents")`
 -  Add attribute: 'visibility: hidden'
