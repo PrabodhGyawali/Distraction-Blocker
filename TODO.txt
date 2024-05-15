@@ -1,7 +1,17 @@
-
+# Follow Hello World Extension guide by google.com first
 
 # TOFIX: Fix error with Cors requirements for API-requests
 
 Go to -> `document.querySelector("#contents")`
 -  Add attribute: 'visibility: hidden'
 - Redirect from shorts
+
+Archive:
+```
+"content_scripts": [
+    {
+      "matches": ["*://*.youtube.com/*"],
+      "js": ["content.js"]
+    }
+  ]
+```
