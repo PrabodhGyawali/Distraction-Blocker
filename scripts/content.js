@@ -1,17 +1,8 @@
-// Hides the youtube reccommendations
-document.querySelector('#contents.ytd-rich-grid-renderer').style.visibility = "hidden"
+// Hides the youtube recommendations
+alert("script loaded");
+thumbnails = document.querySelector('#contents.ytd-rich-grid-renderer')
 
-
-const getQuote = async () => {
-    // Retrieval type [quotes, today, author, random]. Required.
-    var mode = 'quotes'
-    fetch(`https://zenquotes.io/api${mode}` , {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-    }).then(async response => {       
-        return await response.json()   
-    })
+if (thumbnails) {
+    thumbnails.style.visibility = "hidden";
+    console.log("Youtube recommendations hidden");
 }
-alert(getQuote())

@@ -1,6 +1,6 @@
 # Add the scripts back and test if youtube is blocked
 
-# TOFIX: Fix error with Cors requirements for API-requests
+# TOFIX: Make Content.js load consistently
 
 Go to -> `document.querySelector("#contents")`
 -  Add attribute: 'visibility: hidden'
@@ -15,22 +15,6 @@ Content scripts tab -> add breakpoints etc...
 url: chrome://serviceworker-internals
   - for terminating service workers
 
-## Running scripts on every page:
-```
-{
-  "manifest_version": 3,
-  "name": "Reading time",
-  "version": "1.0",
-  "description": "Add the reading time to Chrome Extension documentation articles"
-}
-```
-
-Archive:
-```
-"content_scripts": [
-    {
-      "matches": ["*://*.youtube.com/*"],
-      "js": ["content.js"]
-    }
-  ]
-```
+## Content-Scripts
+- `matches` for identifying where to inject the content scripts into. `<scheme>://<host><path>`
+- match pattern requirements where '*' cannot be on url
