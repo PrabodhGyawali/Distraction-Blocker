@@ -15,6 +15,16 @@ Content scripts tab -> add breakpoints etc...
 url: chrome://serviceworker-internals
   - for terminating service workers
 
+## Running scripts on every page:
+```
+{
+  "manifest_version": 3,
+  "name": "Reading time",
+  "version": "1.0",
+  "description": "Add the reading time to Chrome Extension documentation articles"
+}
+```
+
 Archive:
 ```
 "content_scripts": [
