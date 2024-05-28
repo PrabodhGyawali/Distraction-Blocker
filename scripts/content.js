@@ -30,7 +30,7 @@ window.onload = function() {
                     secondary.style.display = "none";
                 }
             }   
-        })
+        });
     });
     observer.observe(document, { childList: true, subtree: true });
     
