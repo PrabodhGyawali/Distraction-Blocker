@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Social Media Signal Maximizer",
-  "description": "Decluttering youtube.com.",
+  "description": "Decluttering youtube.com, instagram.com, and twitter.com",
   "version": "1.0",
 
   "action": {
@@ -17,9 +17,21 @@
 
   "content_scripts": [
     {
-      "js": ["scripts/content.js"],
+      "js": ["scripts/youtube-content.js"],
       "matches": [
         "https://www.youtube.com/*"
+      ]
+    },
+    {
+      "js": ["scripts/instagram-content.js"],
+      "matches": [
+        "https://www.instagram.com/*"
+      ]
+    },
+    {
+      "js": ["scripts/twitter-content.js"],
+      "matches": [
+        "https://twitter.com/*"
       ]
     }
   ]

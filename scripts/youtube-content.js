@@ -1,5 +1,11 @@
+// For restricting URL to block ADHD content
 const currentURL = window.location.href;
-console.log(currentURL);
+
+// Check whenver link is clicked the URL of page: BLOCK shorts and home-page recommendations
+document.addEventListener('click', (e) => {
+    const url = e.target.href;
+    console.log('Page clicked:', url);
+});
 
 // Hides the youtube home-page recommendations
 window.onload = function() {
@@ -53,3 +59,5 @@ window.onload = function() {
         footer.style.display = "none";
     }
 };
+
+
