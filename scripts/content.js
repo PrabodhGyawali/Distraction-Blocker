@@ -15,21 +15,30 @@ window.onload = function() {
 
     // Reacting to a change in the DOM
     const observer = new MutationObserver((mutationList, observer) => {
+        // console.log(mutationList);
         mutationList.forEach(mutation => {
             // Customize the Sections -> Watch-later is only allowed
             if (mutation.target.id === 'sections') {
-                sections = document.querySelector('#sections');
+                const sections = document.querySelector('#sections');
                 if (sections) {
                     sections.style.display = "none";
                 }
             }
             // Remove Footer
             if (mutation.target.id === 'footer') {
-                secondary = document.querySelector('#footer');
+                const secondary = document.querySelector('#footer');
                 if (secondary) {
                     secondary.style.display = "none";
                 }
-            }   
+            }
+            // Remove Shorts
+            if (mutation.target.id === 'items') {
+                const shortsElement = document.querySelector('ytd-mini-guide-entry-renderer[aria-label="Shorts"]');
+                console.log(shortsElement);
+                if (shortsElement) {
+                    shortsElement.style.display = "none";
+                }
+            }
         });
     });
     observer.observe(document, { childList: true, subtree: true });

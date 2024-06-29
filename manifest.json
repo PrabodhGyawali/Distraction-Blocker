@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
-  "name": "Thumbnails Blocked",
-  "description": "Inject a script to block youtube.com thumbnails to avoid distraction.",
+  "name": "Social Media Signal Maximizer",
+  "description": "Decluttering youtube.com.",
   "version": "1.0",
 
   "action": {

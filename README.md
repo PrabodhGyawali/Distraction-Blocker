@@ -5,7 +5,15 @@ Chrome-Extensions to block most of the noise from social networks (Youtube, Inst
 This repository is filled with chrome extensions I developed as I couldn't find any online in order to reduce my regretted time on social media whilst on my computer.
 Rather than not using social media at all, this is to increase my controlling the noise (subjective of course) on platforms like Youtube, Instagram and Twitter.
 
-At the same time I wish to improve my skills with Javascript and Web Designing in general through this project-based approach.
+### Primary Goal
+- Improving Javascript and Web Designing in general through this project-based approach.
+- Learning Typescript
+
+### Secondary Goal
+- Learn about Search Algorithms in different platforms and Search in general
+- Page Rank algorithm etc.
+
+
 
 ## Extensions within the Repo
 Youtube Extensions:
@@ -18,7 +26,7 @@ Instagram Extensions:
 2. Block url for reels
 3. 
 
-Twitter Extensions:
+Twitter Extensions: Building a free version of the TweetDeck -> Maximize the platform for learning as opposed to drama and politics
 1. Get rid of For you and Following pages.
 2. Add Settings for this.
 
