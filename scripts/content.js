@@ -1,15 +1,21 @@
-// Hides the youtube recommendations
+const currentURL = window.location.href;
+console.log(currentURL);
+
+// Hides the youtube home-page recommendations
 window.onload = function() {
-    // Remove Thumbnails
-    thumbnails = document.querySelector('#contents.ytd-rich-grid-renderer');
-    if (thumbnails) {
-        thumbnails.style.display = "none";
+    if (!currentURL.includes("/results?search_query=")) {
+        // Remove Thumbnails
+        thumbnails = document.querySelector('#contents.ytd-rich-grid-renderer');
+        if (thumbnails) {
+            thumbnails.style.display = "none";
+        }
+        // Remove Page Manager
+        pageManager = document.querySelector('ytd-page-manager');
+        if (pageManager) {
+            pageManager.style.display = "none";
+        }
     }
-    // Remove Page Manager
-    pageManager = document.querySelector('ytd-page-manager');
-    if (pageManager) {
-        pageManager.style.display = "none";
-    }
+    
     // Remove Left-Side Bar Sections: 5 Sections
     // More from Youtube
 
@@ -34,7 +40,6 @@ window.onload = function() {
             // Remove Shorts
             if (mutation.target.id === 'items') {
                 const shortsElement = document.querySelector('ytd-mini-guide-entry-renderer[aria-label="Shorts"]');
-                console.log(shortsElement);
                 if (shortsElement) {
                     shortsElement.style.display = "none";
                 }
