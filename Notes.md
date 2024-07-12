@@ -14,7 +14,7 @@
     }
 }
 > The sections above except for "ytd-video-renderer" are noise, as it is not linked to the search query 
-> **TODO**: Create a list of these and get delete those element tags 
+> **TODO**: On url search don't remove whole contents page
 
 ### TODO: Add Watch-Later section and Youtube-Music 
 
