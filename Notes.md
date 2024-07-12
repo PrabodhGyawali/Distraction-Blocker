@@ -21,8 +21,15 @@
 # Instagram
 
 # X
+##### Understanding the DOM
+Wierd Coded Class names:
+- Feeds: `<div role="presentation" class="css-175oi2r r-14tvyh0 r-cpa5s6 r-16y2uox">`
+- Right-section: `<div class="css-175oi2r r-kemksi r-1kqtdi0 r-1867qdf r-1phboty r-rs99b7 r-1ifxtd0 r-1udh08x">`
 
-
+Feed DOM:
+- `Who to follow` div
+- `Crypto scam`
+- UBlock Origin does a good job getting rid of ads
 
 
 ### New Variables and DOM Elements:

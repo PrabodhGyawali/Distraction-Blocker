@@ -26,7 +26,7 @@ Instagram Extensions:
 2. Block url for reels
 3. 
 
-Twitter Extensions: Building a free version of the TweetDeck -> Maximize the platform for learning as opposed to drama and politics
+Twitter Extensions: Building a free version of the TweetDeck -> Maximize the platform for learning as opposed to drama and politics: 
 1. Get rid of For you and Following pages.
 2. Add Settings for this.
 
@@ -35,4 +35,4 @@ Ultimate Goal:
 
 Future project goals:
 - Train an AI model to get rid of click-baity thumbnails ("Things I wish I knew", "Tier list", )
-- Automate this process of getting rid of interfaces with AI so I don't have to manually go into the JS, HTML, CSS etc.
+- Be able to draw patterns from past extensions on new things.
