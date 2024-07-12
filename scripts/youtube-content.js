@@ -1,5 +1,12 @@
 // For restricting URL to block ADHD content
 const currentURL = window.location.href;
+const noise_elements = [
+    // "ytd-video-renderer",    // Videos linked to the search query
+    "ytd-reel-shelf-renderer",
+    "ytd-playlist-renderer",
+    "ytd-shelf-renderer",
+    "ytd-radio-renderer",
+];
 
 // Check whenver link is clicked the URL of page: BLOCK shorts and home-page recommendations
 document.addEventListener('click', (e) => {
@@ -43,12 +50,16 @@ window.onload = function() {
                     secondary.style.display = "none";
                 }
             }
-            // Remove Shorts
-            if (mutation.target.id === 'items') {
-                const shortsElement = document.querySelector('ytd-mini-guide-entry-renderer[aria-label="Shorts"]');
-                if (shortsElement) {
-                    shortsElement.style.display = "none";
-                }
+            // Remove Noise in search results
+            if (mutation.target.id === 'contents') {
+                console.log("noise detected");
+                noise_elements.forEach((noise_element_name) => {
+                    let noisy_element = document.querySelector(noise_element_name);
+                    console.log(noisy_element);
+                    if (noisy_element) {
+                        noisy_element.remove();
+                    }
+                });
             }
         });
     });
@@ -58,6 +69,7 @@ window.onload = function() {
     if (footer) {
         footer.style.display = "none";
     }
+
 };
 
 
