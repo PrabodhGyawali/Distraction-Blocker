@@ -20,13 +20,16 @@ window.onload = function() {
         // Remove Thumbnails
         thumbnails = document.querySelector('#contents.ytd-rich-grid-renderer');
         if (thumbnails) {
-            thumbnails.style.display = "none";
+            thumbnails.remove();
         }
         // Remove Page Manager
         pageManager = document.querySelector('ytd-page-manager');
         if (pageManager) {
             pageManager.style.display = "none";
         }
+    }
+    if (currentURL.includes("/shorts/")) {
+        window.location.href = "https://www.youtube.com/";
     }
     
     // Remove Left-Side Bar Sections: 5 Sections

@@ -14,9 +14,9 @@
     }
 }
 > The sections above except for "ytd-video-renderer" are noise, as it is not linked to the search query 
-> **TODO**: On url search don't remove whole contents page
+> **TODO**: Prevent Dynamic changes eg when URL changes on a button press
 
-### TODO: Add Watch-Later section and Youtube-Music 
+### TODO: Add Custom Large Watch-Later section and Youtube-Music Button
 
 # Instagram
 
