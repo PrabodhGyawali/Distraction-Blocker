@@ -15,6 +15,15 @@ document.addEventListener('click', (e) => {
     // redirect to the function in window.onload() -> gets rid of dynamic content
 });
 
+chrome.storage.onChanged.addEventListener((changes, namespace) => {
+    for (let [key, {oldValue, newValue}] of Object.entries(changes)) {
+        console.log(
+            `Storage key "${key}" in namespace "${namespace}" changed.`,
+            `Old value was "${oldValue}", new value is "${newValue}".`
+        )
+    }
+});
+
 // Hides the youtube home-page recommendations
 window.onload = function() {
     if (!currentURL.includes("/results?search_query=") && !currentURL.includes("/watch?")) {
