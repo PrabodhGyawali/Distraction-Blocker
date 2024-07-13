@@ -12,6 +12,7 @@ const noise_elements = [
 document.addEventListener('click', (e) => {
     const url = e.target.href;
     console.log('Page clicked:', url);
+    // redirect to the function in window.onload() -> gets rid of dynamic content
 });
 
 // Hides the youtube home-page recommendations
