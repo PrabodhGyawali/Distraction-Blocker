@@ -7,7 +7,6 @@ Rather than not using social media at all, this is to increase my controlling th
 
 ### Primary Goal
 - Improving Javascript and Web Designing in general through this project-based approach.
-- Learning Typescript
 
 ### Secondary Goal
 - Learn about Search Algorithms in different platforms and Search in general

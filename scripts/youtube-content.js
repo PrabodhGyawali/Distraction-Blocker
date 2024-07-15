@@ -26,7 +26,7 @@ chrome.storage.onChanged.addEventListener((changes, namespace) => {
 
 // Hides the youtube home-page recommendations
 window.onload = function() {
-    if (!currentURL.includes("/results?search_query=")) {
+    if (!currentURL.includes("/results?search_query=") && !currentURL.includes("/watch?")) {
         // Remove Thumbnails
         thumbnails = document.querySelector('#contents.ytd-rich-grid-renderer');
         if (thumbnails) {

@@ -14,11 +14,7 @@
     }
 }
 > The sections above except for "ytd-video-renderer" are noise, as it is not linked to the search query 
-<<<<<<< HEAD
 > **TODO**: Prevent Dynamic changes eg when URL changes on a button press
-=======
-> **TODO**: Create a list of these and get delete those element tags 
->>>>>>> parent of f50f002 (Shorts url redirect to homepage)
 
 ### TODO: Add Custom Large Watch-Later section and Youtube-Music Button
 
