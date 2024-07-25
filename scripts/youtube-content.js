@@ -15,19 +15,31 @@ document.addEventListener('click', (e) => {
     // redirect to the function in window.onload() -> gets rid of dynamic content
 });
 
+chrome.storage.onChanged.addEventListener((changes, namespace) => {
+    for (let [key, {oldValue, newValue}] of Object.entries(changes)) {
+        console.log(
+            `Storage key "${key}" in namespace "${namespace}" changed.`,
+            `Old value was "${oldValue}", new value is "${newValue}".`
+        )
+    }
+});
+
 // Hides the youtube home-page recommendations
 window.onload = function() {
     if (!currentURL.includes("/results?search_query=") && !currentURL.includes("/watch?")) {
         // Remove Thumbnails
         thumbnails = document.querySelector('#contents.ytd-rich-grid-renderer');
         if (thumbnails) {
-            thumbnails.style.display = "none";
+            thumbnails.remove();
         }
         // Remove Page Manager
         pageManager = document.querySelector('ytd-page-manager');
         if (pageManager) {
             pageManager.style.display = "none";
         }
+    }
+    if (currentURL.includes("/shorts/")) {
+        window.location.href = "https://www.youtube.com/";
     }
     
     // Remove Left-Side Bar Sections: 5 Sections
