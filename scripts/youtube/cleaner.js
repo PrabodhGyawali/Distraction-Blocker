@@ -49,4 +49,5 @@ function cleanUI(mutation) {
     }
 }
 
-export * from './cleaner.js'
+
+export {cleanUI};

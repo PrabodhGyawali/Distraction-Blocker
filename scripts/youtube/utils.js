@@ -6,4 +6,4 @@ function get_current_href() {
     return window.location.href;
 } 
 
-export * from './utils.js'
+export {get_current_href}; 

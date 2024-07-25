@@ -18,7 +18,7 @@ Rather than not using social media at all, this is to increase my controlling th
 Youtube Extensions:
 1. Create settings page: options to get rid of shorts, other noisy UI interfaces
 2. Block titles with certain words (settings list)
-3. Get rid of Music, playlist etc...
+3. ~~Get rid of Music, playlist etc...~~
 
 Instagram Extensions:
 1. Get rid of everything except for 'messages'
@@ -34,4 +34,5 @@ Ultimate Goal:
 
 Future project goals:
 - Train an AI model to get rid of click-baity thumbnails ("Things I wish I knew", "Tier list", )
+- Add Llamma 3.1 
 - Be able to draw patterns from past extensions on new things.

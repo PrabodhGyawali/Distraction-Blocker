@@ -20,19 +20,20 @@
 
   "content_scripts": [
     {
-      "js": ["scripts/youtube/main.js"],
+      "js": ["dist/yt-bundle.js"],
       "matches": [
         "https://www.youtube.com/*"
-      ]
+      ],
+      "type": "module" 
     },
     {
-      "js": ["scripts/instagram-content.js"],
+      "js": ["scripts/instagram/instagram-content.js"],
       "matches": [
         "https://www.instagram.com/*"
       ]
     },
     {
-      "js": ["scripts/twitter-content.js"],
+      "js": ["scripts/twitter/twitter-content.js"],
       "matches": [
         "https://twitter.com/*"
       ]
