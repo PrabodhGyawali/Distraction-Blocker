@@ -1,45 +1,38 @@
-import { cleanUI } from './cleaner.js';
+
+function homeSignalMax() {
+    removeHomePage();
+    watchLaterButton();
+}
+
+function removeHomePage() {
+    var pageManager = document.querySelector('ytd-page-manager');
+    if (pageManager) {
+        pageManager.remove();
+    }
+    var skeleton = document.querySelector('home-page-skeleton');
+    if (skeleton) {
+        skeleton.remove()
+    }
+}
 
 /**
  * Add a 1 button to redirect to `/feed/you`
  */
-function homeSignalMax() {
-    console.log("home func called")
-    removeHomePage();
+function watchLaterButton() {
     const button = document.createElement('button');
-    button.className = "watch-later"
+    button.innerHTML = "Watch Later";
+    button.className = "watch-later";
+    const body = document.querySelector("body");
+    body.appendChild(button);
+    // Style the button
+    button.style.position = 'absolute';
+    button.style.fontSize = '5em';
+    button.style.top = '50%';
+    button.style.left= '45%';
+    button.addEventListener('click', () => {
+        window.location.href = 'https://youtube.com/feed/you';
+    });
+    removeHomePage();
 }
-
-// // Remove Thumbnails
-// thumbnails = document.querySelector('#contents.ytd-rich-grid-renderer');
-// if (thumbnails) {
-//     thumbnails.remove();
-// }
-// Remove Page Manager
-function removeHomePage() {
-    pageManager = document.querySelector('ytd-page-manager');
-    if (pageManager) {
-        pageManager.style.display = "none";
-    }
-}
-
-
-// Hides the youtube home-page recommendations
-// window.onload = () => {
-//     // Reacting to a change in the DOM
-//     const observer = new MutationObserver((mutationList, observer) => {
-//         mutationList.forEach(mutation => {
-//             // TODO: Use Clear Search Results button
-//             cleanUI();
-//         });
-//     });
-//     observer.observe(document, { childList: true, subtree: true });
-    
-//     footer = document.querySelector('#footer');
-//     if (footer) {
-//         footer.style.display = "none";
-//     }
-
-// };
 
 export default homeSignalMax;
