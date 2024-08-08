@@ -1,5 +1,5 @@
 # Distraction-Blocker
-Chrome-Extensions to block most of the noise from social networks (Youtube, Instagram, Twitter). 
+Chrome-Extensions to block most of the noise from social networks (Youtube, Instagram). 
 
 ## Purpose of project
 This repository is filled with chrome extensions I developed as I couldn't find any online in order to reduce my regretted time on social media whilst on my computer.
@@ -25,14 +25,10 @@ Instagram Extensions:
 2. Block url for reels
 3. 
 
-Twitter Extensions: Building a free version of the TweetDeck -> Maximize the platform for learning as opposed to drama and politics: 
-1. Get rid of For you and Following pages.
-2. Add Settings for this.
 
-Ultimate Goal:
-1. Merge this extensions into one extension that I can use whenever on a social network.
 
 Future project goals:
 - Train an AI model to get rid of click-baity thumbnails ("Things I wish I knew", "Tier list", )
 - Add Llamma 3.1 
 - Be able to draw patterns from past extensions on new things.
+

@@ -28,12 +28,6 @@
       "matches": [
         "https://www.instagram.com/*"
       ]
-    },
-    {
-      "js": ["scripts/twitter/twitter-content.js"],
-      "matches": [
-        "https://twitter.com/*"
-      ]
     }
   ]
 }
