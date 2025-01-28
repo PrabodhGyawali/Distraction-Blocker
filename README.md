@@ -1,38 +1,127 @@
-# Distraction-Blocker
-Chrome-Extensions to block most of the noise from social networks (Youtube, Instagram, Twitter). 
+# Social Media Signal Maximizer
 
-## Purpose of project
-This repository is filled with chrome extensions I developed as I couldn't find any online in order to reduce my regretted time on social media whilst on my computer.
-Rather than not using social media at all, this is to increase my controlling the noise (subjective of course) on platforms like Youtube, Instagram and Twitter.
+A Chrome extension that helps you focus on meaningful content by removing distracting elements from social media platforms (YouTube, Instagram, Twitter).
 
-### Primary Goal
-- Improving Javascript and Web Designing in general through this project-based approach.
+## Overview
 
-### Secondary Goal
-- Learn about Search Algorithms in different platforms and Search in general
-- Page Rank algorithm etc.
+This extension helps you regain control over your social media experience by:
+- Decluttering user interfaces
+- Removing potentially distracting features (e.g., Shorts, Reels)
+- Enhancing search functionality
+- Providing customizable content filters
 
+Currently supports:
+- YouTube
+- Instagram
+- Twitter
 
+## Features
 
-## Extensions within the Repo
-Youtube Extensions:
-1. Create settings page: options to get rid of shorts, other noisy UI interfaces
-2. Block titles with certain words (settings list)
-3. ~~Get rid of Music, playlist etc...~~
+### YouTube
+- Enhanced search functionality
+- Removal of distracting UI elements (Shorts, unnecessary icons)
+- Customizable content filters
+- Clean, focused viewing experience
 
-Instagram Extensions:
-1. Get rid of everything except for 'messages'
-2. Block url for reels
-3. 
+### Instagram
+- Messages-focused interface
+- Reels blocking
+- Streamlined navigation
 
-Twitter Extensions: Building a free version of the TweetDeck -> Maximize the platform for learning as opposed to drama and politics: 
-1. Get rid of For you and Following pages.
-2. Add Settings for this.
+### Twitter
+- TweetDeck-inspired features
+- Learning-oriented content prioritization
+- Customizable feed settings
 
-Ultimate Goal:
-1. Merge this extensions into one extension that I can use whenever on a social network.
+## Installation
 
-Future project goals:
-- Train an AI model to get rid of click-baity thumbnails ("Things I wish I knew", "Tier list", )
-- Add Llamma 3.1 
-- Be able to draw patterns from past extensions on new things.
+1. Clone the repository:
+```bash
+git clone https://github.com/yourusername/Social-Media-Signal-Maximizer.git
+```
+
+2. Install dependencies:
+```bash
+npm install
+```
+
+3. Build the extension:
+```bash
+npm run build
+```
+
+4. Load in Chrome:
+   - Open Chrome and navigate to `chrome://extensions/`
+   - Enable "Developer mode"
+   - Click "Load unpacked"
+   - Select the `dist` directory
+
+## Usage
+
+1. Click the extension icon in Chrome's toolbar
+2. Configure your preferences for each platform
+3. Refresh your social media pages to see the changes
+
+## Development
+
+This project uses:
+- Manifest V3
+- JavaScript modules
+- Vite for bundling
+
+### Project Structure
+```
+├── dist/               # Bundled extension files
+├── images/            # Extension icons
+├── popup/             # Extension popup interface
+├── scripts/           # Platform-specific content scripts
+│   ├── youtube/      # YouTube features
+│   ├── instagram/    # Instagram features
+│   └── twitter/      # Twitter features
+└── manifest.json      # Extension manifest
+```
+
+### Building
+```bash
+npm run build     # Production build
+npm run dev       # Development build with watch
+```
+
+## Future Goals
+
+### Short-term
+- [ ] Settings page for UI customization
+- [ ] Enhanced content filtering
+- [ ] Cross-platform settings sync
+
+### Long-term
+- [ ] AI-powered clickbait detection
+- [ ] Integration with LLaMa 3.1
+- [ ] Pattern recognition for new platforms
+- [ ] Browser extension pattern library
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+### Development Process
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Acknowledgments
+
+- Built with manifest V3
+- Inspired by the need for focused social media experiences
+- Developed as a learning project for JavaScript and web development
+
+## Connect
+
+- Report bugs or request features through [GitHub Issues](https://github.com/yourusername/Distraction-Blocker/issues)
+- Star the repository if you find it useful!
