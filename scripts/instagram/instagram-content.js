@@ -1,4 +1,4 @@
-const valid_paths = new Set(['/direct', '/accounts/edit']);
+const valid_paths = new Set(['/direct', '/accounts/']);
 
 function isValidPath(url) {
     const path = new URL(url).pathname;
