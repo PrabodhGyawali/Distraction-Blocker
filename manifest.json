@@ -21,7 +21,7 @@
       "matches": [
         "https://www.youtube.com/*"
       ],
-      "type": "module" 
+      "run_at": "document_start"
     },
     {
       "js": ["scripts/instagram/instagram-content.js"],

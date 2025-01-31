@@ -13,7 +13,6 @@ const noiseElements = [
  * @param {string[]}
  */
 function cleanSearchResults() {
-    console.log("reach here");
     const observer = new MutationObserver((mutationList, observer) => {
         mutationList.forEach(mutation => {
             if (mutation.target.id === 'contents') {
