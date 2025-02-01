@@ -1,7 +1,7 @@
-
 export function homeSignalMax() {
     console.log("maximizing home signal");
     if (removeHomePage()) {
+        removeGuide();
         watchLaterButton();    
     };
 }
@@ -14,6 +14,22 @@ export function removeHomePage() {
         return true;
     }
     setTimeout(homeSignalMax, 1000);
+}
+
+/**
+ * Removes the guide element (#guide) from the page
+ * @returns {boolean} true if guide was successfully removed
+ */
+export function removeGuide() {
+    const guideElement = document.querySelector('#guide');
+    console.log(guideElement);
+    if (guideElement) {
+        guideElement.remove();
+        clearTimeout();
+        return true;
+    }
+    setTimeout(removeGuide, 1000);
+    return false;
 }
 
 /**

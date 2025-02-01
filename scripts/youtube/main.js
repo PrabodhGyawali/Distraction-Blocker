@@ -1,7 +1,8 @@
+import { isValidPath, redirectToHome } from "./utils.js";
+import { removeGuide } from "./home.js";
 
-import { get_current_href, isValidPath, redirectToHome } from "./utils.js";
-
-let original_url = get_current_href();
+let lastCheckedURL = window.location.href;
+let lastPathname = window.location.pathname;
 
 /**
  * Initializes route-specific features when the page first loads
@@ -14,6 +15,9 @@ async function initializeRoute() {
         const path = urlObj.pathname;
 
         console.log('[DEBUG] Initializing route:', path);
+
+        // Remove guide element for all routes
+        removeGuide();
 
         // Handle home page specific actions
         if (path === '/') {
@@ -52,8 +56,30 @@ async function initializeRoute() {
  */
 function validateCurrentURL() {
     const currentURL = window.location.href;
-    console.log('[DEBUG] Validating URL:', currentURL);
+    const currentPathname = window.location.pathname;
     
+    console.log('[DEBUG] Validating URL:', currentURL);
+    console.log('[DEBUG] Current pathname:', currentPathname, 'Last pathname:', lastPathname);
+    
+    // Check if pathname has changed (client-side routing)
+    if (currentPathname !== lastPathname) {
+        console.log('[DEBUG] Path changed from', lastPathname, 'to', currentPathname);
+        
+        // Update last pathname
+        lastPathname = currentPathname;
+        
+        // Validate new path
+        if (!isValidPath(currentURL)) {
+            console.log('[DEBUG] New path is invalid, redirecting to home');
+            redirectToHome();
+            return;
+        }
+        
+        // If path is valid, reinitialize route
+        initializeRoute();
+    }
+    
+    // Regular validation
     if (!isValidPath(currentURL)) {
         console.log('[DEBUG] Invalid path detected, redirecting to home');
         redirectToHome();
@@ -66,20 +92,20 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // First check if the current path is valid
     const currentURL = window.location.href;
-    if (original_url == currentURL) {
-        if (!isValidPath(currentURL)) {
-            redirectToHome();
-            return;
-        }
-    } else {
-        original_url = currentURL;
-        window.location.href = currentURL;
+    if (!isValidPath(currentURL)) {
+        console.log('[DEBUG] Initial path is invalid, redirecting to home');
+        redirectToHome();
+        return;
     }
+    
+    // Store initial URL and pathname
+    lastCheckedURL = currentURL;
+    lastPathname = window.location.pathname;
     
     
     // Initialize route-specific features
     initializeRoute();
     
-    // Set up periodic URL validation
+    // Periodic URL validation
     setInterval(validateCurrentURL, 1000);
 });
