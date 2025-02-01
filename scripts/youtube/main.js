@@ -1,5 +1,5 @@
 import { isValidPath, redirectToHome } from "./utils.js";
-import { removeGuide } from "./home.js";
+import { removeGuide, removeWatchLaterButton, watchLaterButton } from "./home.js";
 
 let lastCheckedURL = window.location.href;
 let lastPathname = window.location.pathname;
@@ -20,11 +20,20 @@ async function initializeRoute() {
         removeGuide();
 
         // Handle home page specific actions
+        // Remove watch later button if not on home page
+        if (path !== '/') {
+            removeWatchLaterButton();
+        }
+
         if (path === '/') {
             console.log('[DEBUG] Loading home page specific functions');
             try {
                 const homeModule = await import('./home.js');
                 homeModule.default();
+                // Ensure watch later button exists on home page
+                if (!document.querySelector('.watch-later')) {
+                    watchLaterButton();
+                }
             } catch (error) {
                 console.error('[DEBUG] Error loading home.js:', error);
             }
@@ -67,6 +76,7 @@ function validateCurrentURL() {
         
         // Update last pathname
         lastPathname = currentPathname;
+        removeWatchLaterButton();
         
         // Validate new path
         if (!isValidPath(currentURL)) {

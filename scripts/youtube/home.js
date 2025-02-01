@@ -20,6 +20,15 @@ export function removeHomePage() {
  * Removes the guide element (#guide) from the page
  * @returns {boolean} true if guide was successfully removed
  */
+export function removeWatchLaterButton() {
+    const watchLaterBtn = document.querySelector('.watch-later');
+    if (watchLaterBtn) {
+        watchLaterBtn.remove();
+        return true;
+    }
+    return false;
+}
+
 export function removeGuide() {
     const guideElement = document.querySelector('#guide');
     console.log(guideElement);
@@ -35,7 +44,7 @@ export function removeGuide() {
 /**
  * Add a 1 button to redirect to `/feed/you`
  */
-function watchLaterButton() {
+export function watchLaterButton() {
     const button = document.createElement('button');
     button.innerHTML = "Watch Later";
     button.className = "watch-later";
