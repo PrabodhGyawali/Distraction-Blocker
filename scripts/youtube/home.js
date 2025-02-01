@@ -1,18 +1,19 @@
 
-function homeSignalMax() {
-    removeHomePage();
-    watchLaterButton();
+export function homeSignalMax() {
+    console.log("maximizing home signal");
+    if (removeHomePage()) {
+        watchLaterButton();    
+    };
 }
 
-function removeHomePage() {
-    var pageManager = document.querySelector('ytd-page-manager');
-    if (pageManager) {
-        pageManager.remove();
-    }
-    var skeleton = document.querySelector('home-page-skeleton');
+export function removeHomePage() {
+    var skeleton = document.querySelector('#page-manager > ytd-browse > ytd-two-column-browse-results-renderer');
     if (skeleton) {
-        skeleton.remove()
+        skeleton.remove();
+        clearTimeout();
+        return true;
     }
+    setTimeout(homeSignalMax, 1000);
 }
 
 /**
@@ -32,7 +33,6 @@ function watchLaterButton() {
     button.addEventListener('click', () => {
         window.location.href = 'https://youtube.com/feed/you';
     });
-    removeHomePage();
 }
 
 export default homeSignalMax;

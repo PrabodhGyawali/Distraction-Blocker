@@ -53,4 +53,4 @@ function cleanUI() {
 }
 
 
-export {cleanUI, cleanSearchResults};
+export default cleanSearchResults;

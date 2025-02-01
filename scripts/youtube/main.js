@@ -1,152 +1,85 @@
-const valid_paths = new Set(['/watch', '/results?search_query=', '/feed/you', '/']);
 
-function isValidPath(url) {
+import { get_current_href, isValidPath, redirectToHome } from "./utils.js";
+
+let original_url = get_current_href();
+
+/**
+ * Initializes route-specific features when the page first loads
+ * This runs only once when the DOM is ready
+ */
+async function initializeRoute() {
     try {
-        const urlObj = new URL(url);
+        const currentURL = window.location.href;
+        const urlObj = new URL(currentURL);
         const path = urlObj.pathname;
-        
-        // Special case for root path to ensure exact match
+
+        console.log('[DEBUG] Initializing route:', path);
+
+        // Handle home page specific actions
         if (path === '/') {
-            return true;
-        }
-        
-        return Array.from(valid_paths)
-            .filter(p => p !== '/') 
-            .some(valid_path => path.startsWith(valid_path));
-    } catch (e) {
-        console.error('Error parsing URL:', e);
-        return false;
-    }
-}
-
-function redirectToHome() {
-    const currentURL = window.location.href;
-    console.log('Redirecting from:', currentURL);
-    window.location.href = 'https://www.youtube.com';
-}
-
-// shadow DOM checker
-function isInShadowDOM(element) {
-    return element.getRootNode() instanceof ShadowRoot;
-}
-
-// Enhanced click handler that works with Shadow DOM
-function handleClick(e) {
-    // Get the complete path of elements from the click target up to the window
-    const path = e.composedPath();
-    console.log('Click path:', path);
-    
-    // Check all elements in the path for our target selectors
-    for (let element of path) {
-        if (element instanceof Element) {
-            // Check if the element is any kind of interactive element we want to monitor
-            const isClickable = element.matches(`
-                a, 
-                button, 
-                [role="button"], 
-                .shortsLockupViewModelHostEndpoint,
-                ytm-shorts-lockup-view-model,
-                ytm-shorts-lockup-view-model-v2
-            `);
-
-            if (isClickable) {
-                const currentURL = window.location.href;
-                console.log('Clickable element detected, checking URL:', currentURL);
-                
-                if (!isValidPath(currentURL)) {
-                    console.log('Invalid path detected, preventing navigation');
-                    e.preventDefault();
-                    e.stopPropagation();
-                    redirectToHome();
-                    break;
-                }
+            console.log('[DEBUG] Loading home page specific functions');
+            try {
+                const homeModule = await import('./home.js');
+                homeModule.default();
+            } catch (error) {
+                console.error('[DEBUG] Error loading home.js:', error);
             }
         }
-    }
-}
 
-// Intercept all anchor clicks more aggressively
-function handleAnchorClick(e) {
-    const anchor = e.target.closest('a');
-    if (anchor) {
-        const href = anchor.getAttribute('href');
-        if (href && !isValidPath(href)) {
-            console.log('Invalid anchor href detected:', href);
-            e.preventDefault();
-            e.stopPropagation();
-            redirectToHome();
-            return false;
+        if (path.startsWith('/results')) {
+            let watch_later = document.getElementById("watch-later");
+            if (watch_later) {
+                watch_later.remove();
+            }
+            try {
+                const searchModule = await import ('./cleaner.js');
+                searchModule.default();
+                cleanSearchResults();
+                console.log('cleaning search');
+            } catch (error) {
+                console.error('[DEBUG] Error loading search.js:', error);
+            }
         }
+        
+    } catch (e) {
+        console.error('[DEBUG] Error in initializeRoute:', e);
     }
 }
 
-// Create a wrapper for history API modifications
-function createHistoryHandle(type) {
-    const original = window.history[type];
-    return function() {
-        const newUrl = arguments[2]; // URL is the third argument
-        console.log(`History ${type} called with URL:`, newUrl);
-        
-        if (newUrl && !isValidPath(newUrl)) {
-            console.log(`Blocked ${type} to invalid path:`, newUrl);
+/**
+ * Simple URL validator that runs periodically
+ * Only checks if the current URL is valid and redirects if not
+ */
+function validateCurrentURL() {
+    const currentURL = window.location.href;
+    console.log('[DEBUG] Validating URL:', currentURL);
+    
+    if (!isValidPath(currentURL)) {
+        console.log('[DEBUG] Invalid path detected, redirecting to home');
+        redirectToHome();
+    }
+}
+
+// Initialize when the DOM is fully loaded
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('[DEBUG] DOM loaded, initializing route');
+    
+    // First check if the current path is valid
+    const currentURL = window.location.href;
+    if (original_url == currentURL) {
+        if (!isValidPath(currentURL)) {
             redirectToHome();
             return;
         }
-        
-        const result = original.apply(this, arguments);
-        window.dispatchEvent(new Event('locationchange'));
-        return result;
-    };
-}
-
-// Initialize all event listeners and interceptors
-function initializeBlocker() {
-    window.addEventListener('click', handleClick, {capture: true, passive: false});
-    document.addEventListener('click', handleAnchorClick, {capture: true, passive: false});
-
-    // Intercept history API calls
-    window.history.pushState = createHistoryHandle('pushState');
-    window.history.replaceState = createHistoryHandle('replaceState');
-
-    // Add listeners for various navigation events
-    ['load', 'popstate', 'locationchange'].forEach(event => {
-        window.addEventListener(event, () => {
-            const currentURL = window.location.href;
-            console.log(`${event} event detected, URL:`, currentURL);
-            if (!isValidPath(currentURL)) {
-                redirectToHome();
-            }
-        });
-    });
-
-    // Set up mutation observer to watch for DOM changes
-    const observer = new MutationObserver((mutations) => {
-        if (mutations.some(m => m.type === 'childList' || m.type === 'subtree')) {
-            const currentURL = window.location.href;
-            console.log("DOM mutation detected, checking URL:", currentURL);
-            if (!isValidPath(currentURL)) {
-                redirectToHome();
-            }
-        }
-    });
-
-    // Start observing the document body for changes
-    observer.observe(document.body, {
-        childList: true,
-        subtree: true,
-        attributes: false,
-        characterData: false
-    });
-
-    // Initial check when script loads
-    window.onload = () => {
-        const currentURL = window.location.href;
-        console.log('Initial URL check:', currentURL);
-        if (!isValidPath(currentURL)) {
-            redirectToHome();
-        }
-    };
-}
-
-// Start the blocker
-initializeBlocker();
+    } else {
+        original_url = currentURL;
+        window.location.href = currentURL;
+    }
+    
+    
+    // Initialize route-specific features
+    initializeRoute();
+    
+    // Set up periodic URL validation
+    setInterval(validateCurrentURL, 1000);
+});
