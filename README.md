@@ -1,6 +1,6 @@
 # Social Media Signal Maximizer
 
-A Chrome extension that helps you focus on meaningful content by removing distracting elements from social media platforms (YouTube, Instagram, Twitter).
+A [Chrome extension](https://chromewebstore.google.com/detail/social-media-signal-maxim/nhhbanghgdgliekippoppgnpbmamkmin) that helps you focus on meaningful content by removing distracting elements from social media platforms (YouTube, Instagram, Twitter).
 
 ## Overview
 
