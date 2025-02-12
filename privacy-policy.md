@@ -1,6 +1,7 @@
 # Privacy Policy for Social Media Signal Maximizer
 
-Last Updated: [Current Date]
+Last Updated: 01/02/25
+Version: v1.0.0
 
 ## Overview
 Social Media Signal Maximizer is committed to protecting your privacy. This extension modifies the user interface of social media platforms locally in your browser and does not collect, transmit, or store any personal data.
@@ -24,7 +25,7 @@ No data from these sites is collected or transmitted.
 If we make any changes to this privacy policy, we will update this page with the new version.
 
 ## Contact
-If you have any questions about this privacy policy, please create an issue in our GitHub repository: [Your Repository URL]
+If you have any questions about this privacy policy, please create an issue in our GitHub repository: [DistractionBlocker](https://github.com/PrabodhGyawali/Distraction-Blocker)
 
 ## Consent
 By using our extension, you consent to our privacy policy.

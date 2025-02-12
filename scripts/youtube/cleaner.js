@@ -1,18 +1,59 @@
 const noiseElements = [
     // "ytd-video-renderer",    // Videos linked to the search query
-    "ytd-reel-shelf-renderer",
-    "ytd-playlist-renderer",
-    "ytd-shelf-renderer",
-    "ytd-radio-renderer",
+    "ytd-reel-shelf-renderer",  // Youtube Shorts shelf
+    "ytd-playlist-renderer",    // Playlist Suggestions
+    "ytd-shelf-renderer",       // General Content Shelves
+    "ytd-radio-renderer",       // Radio/mix suggestions
 ];
 
-// .badge-shape-wiz__text -> innerHTML -> SHORTS
+/**
+ * Removes node if its a youtube short
+ * @param {Node} node - DOM node to check & potentially remove 
+ * @returns 
+ */
+function removeShorts(node) {
+    if (!(node instanceof Element)) {
+        return;
+    }
+
+    if (node.id === 'contents' || node.id === 'container' || node.id === 'page-manager') {
+        return;
+    }
+
+
+    const isShort = 
+        node.matches('ytd-video-renderer, ytd-rich-item-renderer') &&
+        (
+            node.querySelector(`a[href*="/shorts/"]`) ||
+            node.querySelector('.badge-style-type-shorts') ||
+            node.querySelector('[aria-label*="Shorts"]')
+        );
+    
+    if (isShort) {
+        node.remove();
+        console.log("Removed short");
+    }
+}
+
+/**
+ * Clean up observer when navigating away
+ */
+function cleanup() {
+    if (window.shortsObserver) {
+        window.shortsObserver.disconnect();
+        window.shortsObserver = null;
+    }
+}
 
 /**
  * Iterate over search renderers are not in `noise_elements`
- * @param {string[]}
  */
 function cleanSearchResults() {
+
+    if (window.shortsObserver) {
+        window.shortsObserver.disconnect();
+    }
+
     const observer = new MutationObserver((mutationList, observer) => {
         mutationList.forEach(mutation => {
             if (mutation.target.id === 'contents') {
@@ -28,29 +69,18 @@ function cleanSearchResults() {
             }
         });
     });
-    observer.observe(document, { childList: true, subtree: true });
-}
 
-function removeShorts(node) {
-    if (node.nodeType === Node.ELEMENT_NODE && node.tagName === 'ytd-video-renderer') {
-        const shortsElement = node.querySelector('.badge-shape-wiz__text');
-        if (shortsElement && shortsElement.innerHTML.trim() === "SHORTS") {
-            node.remove();
-            console.log('Removed a SHORTS video');
+    const waitForContents = setInterval(() => {
+        const contentsElement = document.querySelector('ytd-section-list-renderer #contents');
+        if (contentsElement) {
+            clearInterval(waitForContents);
+            observer.observe(document, { childList: true, subtree: true });
+            window.shortsObserver = observer;
         }
-    }
-}   // TODO: Fix
-
-/**
- * Remove left side-bar completely
- * @param `mutation` : {MutationRecord}
- */
-function cleanUI() {
-    var navBar = document.querySelector("ytd-mini-guide-renderer");
-    if (navBar) {
-        navBar.remove();
-    }
+    }, 1000);
 }
 
+document.addEventListener('yt-navigate-start', cleanup);
+document.addEventListener('yt-navigate-finish', cleanSearchResults);
 
 export default cleanSearchResults;

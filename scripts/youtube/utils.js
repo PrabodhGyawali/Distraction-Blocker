@@ -8,7 +8,7 @@ function get_current_href() {
 
 // TODO: Create a method or class related to MutationObserver
 
-const VALID_PATHS = new Set(['/watch', '/results', '/feed/you', '/']);
+const VALID_PATHS = new Set(['/watch', '/results', '/feed/you', '/', '/@']);
 
 function isValidPath(url) {
     try {

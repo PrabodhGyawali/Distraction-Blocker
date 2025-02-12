@@ -93,6 +93,8 @@ npm run dev       # Development build with watch
 - [ ] Settings page for UI customization
 - [ ] Enhanced content filtering
 - [ ] Cross-platform settings sync
+###### Youtube
+- [ ] Clear youtube shorts on search navigation too 
 
 ### Long-term
 - [ ] AI-powered clickbait detection

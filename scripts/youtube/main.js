@@ -4,6 +4,20 @@ import { removeGuide, removeWatchLaterButton, watchLaterButton } from "./home.js
 let lastCheckedURL = window.location.href;
 let lastPathname = window.location.pathname;
 
+async function handleSearchResults() {
+    let watch_later = document.getElementById("wathc-later");
+    if (watch_later) {
+        watch_later.remove();
+    }
+    try {
+        const searchModule = await import('./cleaner.js');
+        searchModule.default();
+        console.log("[Debug] Cleaning search results");
+    } catch (error) {
+        console.error('[Debug] Error loading search/js:', error);
+    }
+}
+
 /**
  * Initializes route-specific features when the page first loads
  * This runs only once when the DOM is ready
@@ -40,18 +54,18 @@ async function initializeRoute() {
         }
 
         if (path.startsWith('/results')) {
-            let watch_later = document.getElementById("watch-later");
-            if (watch_later) {
-                watch_later.remove();
-            }
-            try {
-                const searchModule = await import ('./cleaner.js');
-                searchModule.default();
-                cleanSearchResults();
-                console.log('cleaning search');
-            } catch (error) {
-                console.error('[DEBUG] Error loading search.js:', error);
-            }
+            await handleSearchResults();
+            // let watch_later = document.getElementById("watch-later");
+            // if (watch_later) {
+            //     watch_later.remove();
+            // }
+            // try {
+            //     const searchModule = await import ('./cleaner.js');
+            //     searchModule.default();
+            //     console.log('cleaning search');
+            // } catch (error) {
+            //     console.error('[DEBUG] Error loading search.js:', error);
+            // }
         }
         
     } catch (e) {
@@ -66,6 +80,7 @@ async function initializeRoute() {
 function validateCurrentURL() {
     const currentURL = window.location.href;
     const currentPathname = window.location.pathname;
+    const urlObj = new URL(currentURL);
     
     console.log('[DEBUG] Validating URL:', currentURL);
     console.log('[DEBUG] Current pathname:', currentPathname, 'Last pathname:', lastPathname);
@@ -119,3 +134,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Periodic URL validation
     setInterval(validateCurrentURL, 1000);
 });
+
+// Add a listener for YouTube's navigation events
+document.addEventListener('yt-navigate-finish', () => {
+    console.log('[DEBUG] YouTube navigation detected');
+    initializeRoute();
+});
+
