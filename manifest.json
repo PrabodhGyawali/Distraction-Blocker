@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Social Media Signal Maximizer",
   "description": "Decluttering youtube.com, instagram.com, and twitter.com",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "author": "prabodh.gyawali2005@gmail.com",
   "homepage_url": "https://github.com/PrabodhGyawali/Distraction-Blocker",
 
@@ -29,6 +29,12 @@
       "js": ["scripts/instagram/instagram-content.js"],
       "matches": [
         "https://www.instagram.com/*"
+      ]
+    },
+    {
+      "js": ["scripts/x/x-content.js"],
+      "matches": [
+      	"https://x.com/*"
       ]
     }
   ]
