@@ -5,10 +5,9 @@ A [Chrome extension](https://chromewebstore.google.com/detail/social-media-signa
 ## Overview
 
 This extension helps you regain control over your social media experience by:
-- Decluttering user interfaces
-- Removing potentially distracting features (e.g., Shorts, Reels)
-- Enhancing search functionality
-- Providing customizable content filters
+- [X] Removing potentially distracting features (e.g., Shorts, Reels)
+- [X] Basic search enhancements
+- [ ] Providing customizable content filters
 
 Currently supports:
 - YouTube
@@ -20,7 +19,6 @@ Currently supports:
 ### YouTube
 - Enhanced search functionality
 - Removal of distracting UI elements (Shorts, unnecessary icons)
-- Customizable content filters
 - Clean, focused viewing experience
 
 ### Instagram
@@ -29,9 +27,8 @@ Currently supports:
 - Streamlined navigation
 
 ### Twitter
-- TweetDeck-inspired features
-- Learning-oriented content prioritization
-- Customizable feed settings
+- [X] Bookmarks focused
+- [ ] Must Authenticate to access X or else redirected to '/i/bookmarks'
 
 ## Installation
 
