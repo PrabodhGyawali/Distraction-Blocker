@@ -15,31 +15,6 @@ function redirectToInbox() {
 
 window.onload = redirectToInbox();
 
-// Prevent dynamic behavior loop of the page
-window.addEventListener('click', (e) => {
-    const link = e.target.closest('a');
-    if (link?.href?.includes('instagram.com') && !isValidPath(link.href)) {
-        if (e.target.href.includes('instagram.com') && !e.target.href.includes('/direct/')) {
-            e.preventDefault();
-            redirectToInbox();
-        }
-    };
-    redirectToInbox();
-});
-
-// Intercept history API calls
-const createHistoryHandle = (type) => {
-    const original = window.history[type];
-    return function() {
-        const result = original.apply(this, arguments);
-        window.dispatchEvent(new Event('locationchange'));
-        return result;
-    };
-};
-
-['load', 'popstate', 'locationchange'].forEach(event => {
-    window.addEventListener(event, redirectToInbox);
-});
 
 const observer = new MutationObserver((mutations) => {
     if (mutations.some(m => m.type === 'childList' || m.type === 'subtree')) {

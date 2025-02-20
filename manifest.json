@@ -5,6 +5,18 @@
   "version": "1.2.0",
   "author": "prabodh.gyawali2005@gmail.com",
   "homepage_url": "https://github.com/PrabodhGyawali/Distraction-Blocker",
+  "permissions": [
+	"tabs",
+	"storage"
+  ],
+  "host_permissions": [
+	"*://*.x.com/*"
+  ],
+	
+  "background": {
+	"service_worker": "scripts/x/background.js",
+	"type": "module"
+  },
 
   "action": {
     "default_popup": "popup/popup.html"

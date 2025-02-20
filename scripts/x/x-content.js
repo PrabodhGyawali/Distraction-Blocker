@@ -2,32 +2,43 @@
 let authenticated = false;
 const unauth_valid_paths = new Set(['/i/grok', '/i/bookmarks', '/jobs', '/messages']);
 
-/* custom push & replace states */ 
-const originalPushState = history.pushState;
-const originalReplaceState = history.replaceState;
-
-history.pushState = function() {
-  originalPushState.apply(this, arguments);
-  window.dispatchEvent(new CustomEvent('statechange', { detail: 'pushState' }));
-};
-
-history.replaceState = function() {
-  originalReplaceState.apply(this, arguments);
-  window.dispatchEvent(new CustomEvent('statechange', { detail: 'replaceState' }));
-};
-
-
-function initBookmarkAuth() {
-	localStorage.setItem('bookmark-auth', false);
+function checkCurrentUrl() {
+    if (!authenticated) {
+        const url = window.location.href;
+        if (!Array.from(unauth_valid_paths).some(path => url.includes(path))) {
+            window.location.href = 'https://x.com/i/bookmarks';
+        }
+    }
 }
 
-if (localStorage.getItem('bookmark-auth') == undefined) {
-	console.log('initializing auth');
-	initBookmarkAuth();
-} else {
-	let bookmark_auth = localStorage.getItem('bookmark-auth');
-	authenticated = bookmark_auth === 'true';
+async function initAuth() {
+	await chrome.storage.local.set({'bookmark-auth', 'false'});
+	authenticated = result['bookmark-auth'] === 'true';
+
+	checkCurrentUrl();
 }
+
+async function checkAndInitAuth() {
+	const result = await chrome.storage.local.get(['bookmark-auth']);
+	if (result['bookmark_auth'] === undefined) {
+		console.log('initializing auth');
+		await initAuth();
+	}
+}
+
+// Handle authentication state changes
+async function setAuthenticated(value) {
+	await chrome.storage.local.set({'bookmark-auth': value.toString()});
+}
+
+window.addEventListener('load', async () => {
+	await checkAndInitAuth();
+
+	const authButton = document.querySelector('#authenticate-button');
+	if (authButton) {
+		        authButton.addEventListener('click', () => setAuthenticated(true));
+	}
+});
 
 if (!authenticated) {
 	try {
@@ -42,15 +53,6 @@ if (!authenticated) {
 }
 
 /* History API: Read MDN docs */
-window.addEventListener("popstate", (event) => {
-	// alert(`location: ${document.location}, state: ${JSON.stringify(event.state)}`,);
-	let url = document.location.href;
-	console.log(url);
-	if (!Array.from(unauth_valid_paths).some(path => url.includes(path))) {
-		history.back();
-	}
-});
+window.addEventListener("popstate", checkCurrentUrl);
 
-window.addEventListener("statechange", (e) => {
-	console.log(`${e.detail} detected!`);
-});
+
