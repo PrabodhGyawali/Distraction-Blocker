@@ -28,7 +28,8 @@ Currently supports:
 
 ### Twitter
 - [X] Bookmarks focused
-- [ ] Must Authenticate to access X or else redirected to '/i/bookmarks'
+- [X] Must Authenticate to access X or else redirected to '/i/bookmarks'
+- [X] 12 hour cooldown with only 5 minutes for scrolling (ULTRA LOCK-IN MODE) 
 
 ## Installation
 
