@@ -139,25 +139,38 @@ function startCooldown() {
 
 
 
-function loadCooldownState() {
-    return new Promise((resolve) => {
-        chrome.storage.local.get(['cooldown-end-time'], (result) => {
-            const storedEndTime = result['cooldown-end-time'];
-            if (storedEndTime) {
-                cooldownEndTime = parseInt(storedEndTime);
-                if (isInCooldown()) {
-                    console.log('Cooldown period still active');
-                    // Restart cooldown timer
-                    startCooldown();
-                } else {
-                    console.log('Cooldown period has expired');
-                    cooldownEndTime = null;
-                    chrome.storage.local.remove(['cooldown-end-time']);
-                }
+async function loadCooldownState() {
+    console.log('Loading cooldown state from storage...');
+    
+    try {
+        const result = await chrome.storage.local.get(['cooldown-end-time']);
+        const storedEndTime = result['cooldown-end-time'];
+        
+        console.log('Cooldown storage result:', result);
+        
+        if (storedEndTime) {
+            cooldownEndTime = parseInt(storedEndTime);
+            console.log('Loaded cooldown end time:', new Date(cooldownEndTime));
+            
+            if (isInCooldown()) {
+                console.log('Cooldown period still active - restarting cooldown timer');
+                return true; // Cooldown is active
+            } else {
+                console.log('Cooldown period has expired - clearing state');
+                cooldownEndTime = null;
+                await chrome.storage.local.remove(['cooldown-end-time']);
+                return false; // Cooldown has expired
             }
-            resolve();
-        });
-    });
+        } else {
+            console.log('No cooldown state found in storage');
+            cooldownEndTime = null;
+            return false; // No cooldown
+        }
+    } catch (error) {
+        console.error('Error loading cooldown state:', error);
+        cooldownEndTime = null;
+        return false;
+    }
 }
 
 function startAutoLockTimer() {
@@ -291,7 +304,7 @@ async function checkAndInitAuth() {
     
     try {
         const result = await chrome.storage.local.get(['bookmark-auth']);
-        console.log('Storage result:', result);
+        console.log('Auth storage result:', result);
         
         // Fix the key name inconsistency - use the same key consistently
         const authValue = result['bookmark-auth'];
@@ -349,23 +362,30 @@ async function setAuthenticated(value) {
 }
 
 window.addEventListener('load', async () => {
-    console.log('Window load event fired');
+    console.log('Window load event fired - initializing extension state');
     
     try {
-        // Load cooldown state first
-        await loadCooldownState();
+        // Step 1: Load cooldown state first
+        const hasActiveCooldown = await loadCooldownState();
+        console.log('Cooldown state loaded, active cooldown:', hasActiveCooldown);
         
+        // Step 2: Load authentication state
         await checkAndInitAuth();
+        console.log('Authentication state loaded, authenticated:', authenticated);
         
-        // If user was previously authenticated, restart the timer
-        if (authenticated) {
-            console.log('User was previously authenticated, restarting timer');
+        // Step 3: If user was previously authenticated and no active cooldown, restart the timer
+        if (authenticated && !hasActiveCooldown) {
+            console.log('User was previously authenticated with no cooldown - restarting timer');
             startAutoLockTimer();
+        } else if (authenticated && hasActiveCooldown) {
+            console.log('User was authenticated but cooldown is active - not restarting timer');
         }
+        
     } catch (error) {
-        console.error('Error during auth initialization:', error);
-        // Fallback: assume not authenticated
+        console.error('Error during initialization:', error);
+        // Fallback: assume not authenticated and no cooldown
         authenticated = false;
+        cooldownEndTime = null;
     }
 
     try {
