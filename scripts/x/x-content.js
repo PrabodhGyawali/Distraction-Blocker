@@ -1,6 +1,12 @@
 /* global vars */
 let authenticated = false;
+let autoLockTimer = null;
+let timeRemaining = 0;
+let cooldownEndTime = null;
+let cooldownTimer = null;
 const unauth_valid_paths = new Set(['/i/grok', '/i/bookmarks', '/jobs', '/messages']);
+const AUTO_LOCK_TIME = 5 * 60 * 1000; // 5 minutes in milliseconds
+const COOLDOWN_TIME = 12 * 60 * 60 * 1000; // 12 hours in milliseconds
 
 function createAuthButton() {
     console.log('Creating authentication button...');
@@ -52,21 +58,198 @@ function createAuthButton() {
 function updateButtonState() {
     const authButton = document.getElementById('authenticate-button');
     if (authButton) {
-        authButton.innerHTML = authenticated ? '🔒 Lock Page' : '🔓 Enable Full Access';
-        authButton.style.background = authenticated ? '#dc3545' : '#1d9bf0';
+        if (isInCooldown()) {
+            // Show cooldown time
+            const remaining = getCooldownRemaining();
+            const hours = Math.floor(remaining / (60 * 60 * 1000));
+            const minutes = Math.floor((remaining % (60 * 60 * 1000)) / (60 * 1000));
+            authButton.innerHTML = `⏳ Cooldown (${hours}:${minutes.toString().padStart(2, '0')}h)`;
+            authButton.style.background = '#6c757d'; // Gray color for cooldown
+        } else if (authenticated && autoLockTimer) {
+            // Show countdown if timer is active
+            const minutes = Math.floor(timeRemaining / 60000);
+            const seconds = Math.floor((timeRemaining % 60000) / 1000);
+            authButton.innerHTML = `🔒 Lock (${minutes}:${seconds.toString().padStart(2, '0')})`;
+        } else {
+            authButton.innerHTML = authenticated ? '🔒 Lock Page' : '🔓 Enable Full Access';
+        }
+        
+        if (isInCooldown()) {
+            authButton.style.background = '#6c757d';
+        } else {
+            authButton.style.background = authenticated ? '#dc3545' : '#1d9bf0';
+        }
         
         // Update hover colors
         authButton.onmouseover = () => {
-            authButton.style.background = authenticated ? '#c82333' : '#1a8cd8';
+            if (isInCooldown()) {
+                authButton.style.background = '#5a6268';
+            } else {
+                authButton.style.background = authenticated ? '#c82333' : '#1a8cd8';
+            }
             authButton.style.transform = 'scale(1.05)';
         };
         
         authButton.onmouseout = () => {
-            authButton.style.background = authenticated ? '#dc3545' : '#1d9bf0';
+            if (isInCooldown()) {
+                authButton.style.background = '#6c757d';
+            } else {
+                authButton.style.background = authenticated ? '#dc3545' : '#1d9bf0';
+            }
             authButton.style.transform = 'scale(1)';
         };
     }
 }
+
+function isInCooldown() {
+    return cooldownEndTime && Date.now() < cooldownEndTime;
+}
+
+function getCooldownRemaining() {
+    if (!cooldownEndTime) return 0;
+    return Math.max(0, cooldownEndTime - Date.now());
+}
+
+function startCooldown() {
+    console.log('Starting 12-hour cooldown period');
+    cooldownEndTime = Date.now() + COOLDOWN_TIME;
+    
+    // Store cooldown end time in storage
+    chrome.storage.local.set({'cooldown-end-time': cooldownEndTime.toString()});
+    
+    // Clear any existing cooldown timer
+    if (cooldownTimer) {
+        clearInterval(cooldownTimer);
+    }
+    
+    // Update button every minute during cooldown
+    cooldownTimer = setInterval(() => {
+        if (!isInCooldown()) {
+            console.log('Cooldown period ended');
+            clearInterval(cooldownTimer);
+            cooldownTimer = null;
+            cooldownEndTime = null;
+            chrome.storage.local.remove(['cooldown-end-time']);
+            updateButtonState();
+        } else {
+            updateButtonState();
+        }
+    }, 60000); // Update every minute
+}
+
+
+
+function loadCooldownState() {
+    return new Promise((resolve) => {
+        chrome.storage.local.get(['cooldown-end-time'], (result) => {
+            const storedEndTime = result['cooldown-end-time'];
+            if (storedEndTime) {
+                cooldownEndTime = parseInt(storedEndTime);
+                if (isInCooldown()) {
+                    console.log('Cooldown period still active');
+                    // Restart cooldown timer
+                    startCooldown();
+                } else {
+                    console.log('Cooldown period has expired');
+                    cooldownEndTime = null;
+                    chrome.storage.local.remove(['cooldown-end-time']);
+                }
+            }
+            resolve();
+        });
+    });
+}
+
+function startAutoLockTimer() {
+    console.log('Starting auto-lock timer for 5 minutes');
+    timeRemaining = AUTO_LOCK_TIME;
+    
+    // Clear any existing timer
+    if (autoLockTimer) {
+        clearInterval(autoLockTimer);
+    }
+    
+    // Update the button every second to show countdown
+    autoLockTimer = setInterval(() => {
+        timeRemaining -= 1000;
+        
+        if (timeRemaining <= 0) {
+            // Time's up - auto-lock
+            console.log('Auto-lock timer expired - locking page');
+            clearInterval(autoLockTimer);
+            autoLockTimer = null;
+            setAuthenticated(false);
+            
+            // Show notification
+            showAutoLockNotification();
+        } else {
+            // Update button with remaining time
+            updateButtonState();
+        }
+    }, 1000);
+}
+
+function clearAutoLockTimer() {
+    if (autoLockTimer) {
+        console.log('Clearing auto-lock timer');
+        clearInterval(autoLockTimer);
+        autoLockTimer = null;
+        timeRemaining = 0;
+    }
+}
+
+function clearCooldownTimer() {
+    if (cooldownTimer) {
+        clearInterval(cooldownTimer);
+        cooldownTimer = null;
+    }
+}
+
+function showCooldownNotification() {
+    // Create a temporary notification
+    const notification = document.createElement('div');
+    notification.innerHTML = '⏰ Session ended! 12-hour cooldown started.';
+    notification.style.cssText = `
+        position: fixed;
+        top: 70px;
+        right: 20px;
+        z-index: 999998;
+        background: #ffc107;
+        color: black;
+        padding: 10px 15px;
+        border-radius: 10px;
+        font-size: 12px;
+        font-weight: bold;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        animation: fadeInOut 3s ease-in-out;
+    `;
+    
+    // Add fade animation
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes fadeInOut {
+            0% { opacity: 0; transform: translateY(-10px); }
+            10%, 90% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(-10px); }
+        }
+    `;
+    document.head.appendChild(style);
+    
+    document.body.appendChild(notification);
+    
+    // Remove notification after 3 seconds
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.remove();
+        }
+        if (style.parentNode) {
+            style.remove();
+        }
+    }, 3000);
+}
+
+
+
 
 function checkCurrentUrl() {
     console.log('checkCurrentUrl called, authenticated:', authenticated);
@@ -132,10 +315,28 @@ async function checkAndInitAuth() {
 // Handle authentication state changes
 async function setAuthenticated(value) {
     console.log('setAuthenticated called with value:', value);
+    
+    // Store previous authentication state before changing it
+    const wasAuthenticated = authenticated;
+    
     try {
         await chrome.storage.local.set({'bookmark-auth': value.toString()});
         authenticated = value;
         console.log('Updated authenticated to:', authenticated);
+        
+        if (value) {
+            // User just authenticated - start the auto-lock timer
+            startAutoLockTimer();
+        } else {
+            // User just de-authenticated - clear the timer and start cooldown
+            clearAutoLockTimer();
+            
+            // Start cooldown if we were previously authenticated
+            if (wasAuthenticated) {
+                startCooldown();
+                showCooldownNotification();
+            }
+        }
         
         // Update button appearance
         updateButtonState();
@@ -151,7 +352,16 @@ window.addEventListener('load', async () => {
     console.log('Window load event fired');
     
     try {
+        // Load cooldown state first
+        await loadCooldownState();
+        
         await checkAndInitAuth();
+        
+        // If user was previously authenticated, restart the timer
+        if (authenticated) {
+            console.log('User was previously authenticated, restarting timer');
+            startAutoLockTimer();
+        }
     } catch (error) {
         console.error('Error during auth initialization:', error);
         // Fallback: assume not authenticated
@@ -165,6 +375,16 @@ window.addEventListener('load', async () => {
         // Set up the click handler for toggling authentication
         authButton.addEventListener('click', async () => {
             console.log('Auth button clicked, current state:', authenticated);
+            
+            if (isInCooldown()) {
+                console.log('Cannot unlock - still in cooldown period');
+                // Show cooldown time remaining
+                const remaining = getCooldownRemaining();
+                const hours = Math.floor(remaining / (60 * 60 * 1000));
+                const minutes = Math.floor((remaining % (60 * 60 * 1000)) / (60 * 1000));
+                alert(`Still in cooldown period. ${hours} hours and ${minutes} minutes remaining.`);
+                return;
+            }
             
             if (authenticated) {
                 // Lock the page - de-authenticate
@@ -208,4 +428,14 @@ if (!authenticated) {
 window.addEventListener("popstate", () => {
     console.log('Popstate event fired');
     checkCurrentUrl();
+});
+
+// Handle page visibility changes (tab switching, minimizing)
+document.addEventListener('visibilitychange', () => {
+    if (document.hidden && authenticated && autoLockTimer) {
+        console.log('Page hidden while authenticated - timer continues running');
+    } else if (!document.hidden && authenticated && autoLockTimer) {
+        console.log('Page visible again - timer still running');
+        updateButtonState(); // Update countdown display
+    }
 });
